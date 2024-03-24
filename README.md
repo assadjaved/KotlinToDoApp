@@ -1,3 +1,5 @@
+<img src="https://app.bitrise.io/app/d56f68bc-b8cc-4548-8bae-be9162191d3d/status.svg?token=0i0N9VfsGtwiZDBaaaXN5w&branch=main"/>
+
 This is a Kotlin Multiplatform project targeting Android, iOS.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
