@@ -18,3 +18,10 @@ data class ToDoItemModel(
 fun ToDoItemModel.toJson(): String = Json.encodeToString(this)
 
 fun String.toToDoItemModel(): ToDoItemModel = Json.decodeFromString(this)
+
+@Serializable
+data class AddToDoItemModel(
+    val title: String,
+    val description: String,
+    val priority: Int
+)

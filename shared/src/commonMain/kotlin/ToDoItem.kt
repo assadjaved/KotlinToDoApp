@@ -1,3 +1,5 @@
+import kotlinx.serialization.Serializable
+
 enum class Priority(val value: Int) {
     HIGH(1),
     MEDIUM(2),
@@ -22,3 +24,9 @@ data class ToDoItem(
 expect fun ToDoItem.createdDateStr(): String
 
 expect fun ToDoItem.completedDateStr(): String?
+
+data class AddToDoItem(
+    val title: String,
+    val description: String,
+    val priority: Priority
+)

@@ -21,32 +21,47 @@ struct iOSApp: App {
     }
     
     private func mainTest() {
-//        todoItemsManager.addToDoItem(
-//            item: .init(
-//                id: 1,
-//                title: "todo1",
-//                description: "todo1 desp",
-//                isCompleted: false
-//            )
-//        )
-//        
-//        todoItemsManager.addToDoItem(
-//            item: .init(
-//                id: 2,
-//                title: "todo2",
-//                description: "todo2 desp",
-//                isCompleted: false
-//            )
-//        )
-//        
-//        let storedTodoItems = todoItemsManager.getToDoItems()
-//        print(storedTodoItems)
+        //        todoItemsManager.addToDoItem(
+        //            item: .init(
+        //                id: 1,
+        //                title: "todo1",
+        //                description: "todo1 desp",
+        //                isCompleted: false
+        //            )
+        //        )
+        //
+        //        todoItemsManager.addToDoItem(
+        //            item: .init(
+        //                id: 2,
+        //                title: "todo2",
+        //                description: "todo2 desp",
+        //                isCompleted: false
+        //            )
+        //        )
+        //
+        //        let storedTodoItems = todoItemsManager.getToDoItems()
+        //        print(storedTodoItems)
         
-        todoItemsClient.getToDoItems { result, _ in
-            if let result = result as? TodoItemsResult.Value {
-                print(result.todoItems)
-            } else {
-                print("error")
+        Task {
+            do {
+                let addResult = try await todoItemsClient.addToDoItem(
+                    item: .init(
+                        title: "Call mom",
+                        description: "Ask how mom's doing and update her about your life",
+                        priority: .high
+                    )
+                )
+                print(addResult)
+                
+                let getResult = try await todoItemsClient.getToDoItems()
+                switch onEnum(of: getResult) {
+                case .value(let items):
+                    print(items)
+                case .error(let error):
+                    print(error )
+                }
+            } catch let error {
+                print(error)
             }
         }
     }

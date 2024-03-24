@@ -19,3 +19,19 @@ fun ToDoItemModel.mapToDoItem(): ToDoItem {
         completedAt = this.completedAt
     )
 }
+
+fun AddToDoItem.mapAddToDoItemModel(): AddToDoItemModel {
+    return AddToDoItemModel(
+        title = this.title,
+        description = this.description,
+        priority = this.priority.value
+    )
+}
+
+fun AddToDoItemModel.mapAddToDoItem(): AddToDoItem {
+    return AddToDoItem(
+        title = this.title,
+        description = this.description,
+        priority = Priority.fromValue(this.priority)
+    )
+}
