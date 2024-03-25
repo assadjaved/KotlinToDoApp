@@ -46,4 +46,16 @@ class TodoItemsHttpClient {
             AddToDoItemResult.Error(e)
         }
     }
+
+    suspend fun updateToDoItem(item: ToDoItem): UpdateToDoItemResult {
+        return try {
+            val todoItemModel: ToDoItemModel = httpClient.put("$TODO_ITEMS_ENDPOINT/${item.id}") {
+                header(HttpHeaders.ContentType, ContentType.Application.Json)
+                setBody(item.mapToDoItemModel())
+            }.body()
+            UpdateToDoItemResult.Value(todoItemModel.mapToDoItem())
+        } catch (e: Exception) {
+            UpdateToDoItemResult.Error(e)
+        }
+    }
 }
