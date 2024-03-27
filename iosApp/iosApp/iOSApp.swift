@@ -65,6 +65,9 @@ struct iOSApp: App {
 //                )
 //                print(updateResult)
 //                
+//                let deleteResult = try await todoItemsClient.deleteToDoItem(id: 4)
+//                print(deleteResult)
+//
 //                let getResult = try await todoItemsClient.getToDoItems()
 //                switch onEnum(of: getResult) {
 //                case .value(let items):
