@@ -35,27 +35,36 @@ class TodoItemsHttpClient {
         }
     }
 
-    suspend fun addToDoItem(item: AddToDoItem): AddToDoItemResult {
+    suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult {
         return try {
             val todoItemModel: ToDoItemModel = httpClient.post(TODO_ITEMS_ENDPOINT) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
                 setBody(item.mapAddToDoItemModel())
             }.body()
-            AddToDoItemResult.Value(todoItemModel.mapToDoItem())
+            ToDoItemResult.Value(todoItemModel.mapToDoItem())
         } catch (e: Exception) {
-            AddToDoItemResult.Error(e)
+            ToDoItemResult.Error(e)
         }
     }
 
-    suspend fun updateToDoItem(item: ToDoItem): UpdateToDoItemResult {
+    suspend fun updateToDoItem(item: ToDoItem): ToDoItemResult {
         return try {
             val todoItemModel: ToDoItemModel = httpClient.put("$TODO_ITEMS_ENDPOINT/${item.id}") {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
                 setBody(item.mapToDoItemModel())
             }.body()
-            UpdateToDoItemResult.Value(todoItemModel.mapToDoItem())
+            ToDoItemResult.Value(todoItemModel.mapToDoItem())
         } catch (e: Exception) {
-            UpdateToDoItemResult.Error(e)
+            ToDoItemResult.Error(e)
+        }
+    }
+
+    suspend fun deleteToDoItem(id: Int): ToDoItemResult {
+        return try {
+            val todoItemModel: ToDoItemModel = httpClient.delete("$TODO_ITEMS_ENDPOINT/$id").body()
+            ToDoItemResult.Value(todoItemModel.mapToDoItem())
+        } catch (e: Exception) {
+            ToDoItemResult.Error(e)
         }
     }
 }
