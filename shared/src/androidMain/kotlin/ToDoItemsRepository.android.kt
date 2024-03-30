@@ -1,18 +1,23 @@
-class ToDoItemsRepositoryAndroid: ToDoItemsRepository {
-    override fun getToDoItems(): List<ToDoItem> {
+internal actual fun TodoItemsLocalRepository(): ToDoItemsRepository = ToDoItemsLocalRepository()
+
+class ToDoItemsLocalRepository: ToDoItemsRepository {
+    override suspend fun getToDoItems(): ToDoItemsResult {
         //TODO: Implement
-        return emptyList()
+        return ToDoItemsResult.Error(Exception("Not implemented"))
     }
 
-    override fun addToDoItem(item: ToDoItem) {
+    override suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult {
         //TODO: Implement
+        return ToDoItemResult.Error(Exception("Not implemented"))
     }
 
-    override fun removeToDoItem(item: ToDoItem) {
+    override suspend fun deleteToDoItem(id: Int): ToDoItemResult {
         //TODO: Implement
+        return ToDoItemResult.Error(Exception("Not implemented"))
     }
 
-    override fun updateToDoItem(item: ToDoItem) {
+    override suspend fun updateToDoItem(item: UpdateToDoItem): ToDoItemResult {
         //TODO: Implement
+        return ToDoItemResult.Error(Exception("Not implemented"))
     }
 }

@@ -1,6 +1,11 @@
+enum class ToDoItemsRepositoryType {
+    LOCAL,
+    REMOTE
+}
+
 interface ToDoItemsRepository {
-    fun getToDoItems(): List<ToDoItem>
-    fun addToDoItem(item: ToDoItem)
-    fun removeToDoItem(item: ToDoItem)
-    fun updateToDoItem(item: ToDoItem)
+    suspend fun getToDoItems(): ToDoItemsResult
+    suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult
+    suspend fun deleteToDoItem(id: Int): ToDoItemResult
+    suspend fun updateToDoItem(item: UpdateToDoItem): ToDoItemResult
 }

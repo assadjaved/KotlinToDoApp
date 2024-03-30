@@ -30,3 +30,11 @@ data class AddToDoItem(
     val description: String,
     val priority: Priority
 )
+
+data class UpdateToDoItem(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val priority: Priority,
+    val completedAt: Long? = null
+)

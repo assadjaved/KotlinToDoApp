@@ -1,4 +1,5 @@
-fun ToDoItem.mapToDoItemModel(): ToDoItemModel {
+// *** ToDoItem <---> ToDoItemModel ***
+internal fun ToDoItem.mapToDoItemModel(): ToDoItemModel {
     return ToDoItemModel(
         id = this.id,
         title = this.title,
@@ -9,7 +10,7 @@ fun ToDoItem.mapToDoItemModel(): ToDoItemModel {
     )
 }
 
-fun ToDoItemModel.mapToDoItem(): ToDoItem {
+internal fun ToDoItemModel.mapToDoItem(): ToDoItem {
     return ToDoItem(
         id = this.id,
         title = this.title,
@@ -20,7 +21,8 @@ fun ToDoItemModel.mapToDoItem(): ToDoItem {
     )
 }
 
-fun AddToDoItem.mapAddToDoItemModel(): AddToDoItemModel {
+// *** AddToDoItem <---> AddToDoItemModel ***
+internal fun AddToDoItem.mapAddToDoItemModel(): AddToDoItemModel {
     return AddToDoItemModel(
         title = this.title,
         description = this.description,
@@ -28,10 +30,54 @@ fun AddToDoItem.mapAddToDoItemModel(): AddToDoItemModel {
     )
 }
 
-fun AddToDoItemModel.mapAddToDoItem(): AddToDoItem {
+internal fun AddToDoItemModel.mapAddToDoItem(): AddToDoItem {
     return AddToDoItem(
         title = this.title,
         description = this.description,
         priority = Priority.fromValue(this.priority)
+    )
+}
+
+// *** UpdateToDoItem <---> UpdateToDoItemModel ***
+internal fun UpdateToDoItem.mapUpdateToDoItemModel(): UpdateToDoItemModel {
+    return UpdateToDoItemModel(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        priority = this.priority.value,
+        completedAt = this.completedAt
+    )
+}
+
+internal fun UpdateToDoItemModel.mapUpdateToDoItem(): UpdateToDoItem {
+    return UpdateToDoItem(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        priority = Priority.fromValue(this.priority),
+        completedAt = this.completedAt
+    )
+}
+
+// *** AddToDoItem <---> ToDoItem ***
+internal fun AddToDoItem.mapToDoItem(id: Int, createdAt: Long): ToDoItem {
+    return ToDoItem(
+        id = id,
+        title = this.title,
+        description = this.description,
+        priority = this.priority,
+        createdAt = createdAt
+    )
+}
+
+// *** UpdateToDoItem <---> ToDoItem ***
+internal fun UpdateToDoItem.mapToDoItem(item: ToDoItem): ToDoItem {
+    return ToDoItem(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        priority = this.priority,
+        createdAt = item.createdAt,
+        completedAt = this.completedAt
     )
 }

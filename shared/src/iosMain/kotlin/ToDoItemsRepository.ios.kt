@@ -1,35 +1,64 @@
 import platform.Foundation.NSArray
 import platform.Foundation.NSUserDefaults
 
-class ToDoItemsRepositoryIOS: ToDoItemsRepository {
+internal actual fun TodoItemsLocalRepository(): ToDoItemsRepository = ToDoItemsLocalRepository()
 
-    override fun getToDoItems(): List<ToDoItem> {
+internal class ToDoItemsLocalRepository: ToDoItemsRepository {
+
+    override suspend fun getToDoItems(): ToDoItemsResult {
         val userDefaults = NSUserDefaults.standardUserDefaults
         val items = userDefaults.arrayForKey(USER_DEFAULTS_KEY) as? List<String>
-        return items?.map { it.toToDoItemModel().mapToDoItem() } ?: emptyList()
+        val todoItems = items?.map { it.toToDoItemModel().mapToDoItem() } ?: emptyList()
+        return ToDoItemsResult.Value(todoItems)
     }
 
-    override fun addToDoItem(item: ToDoItem) {
+    override suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult {
         val userDefaults = NSUserDefaults.standardUserDefaults
-        val items = getToDoItems().toMutableList()
-        items.add(item)
-        userDefaults.setObject(items.map { it.mapToDoItemModel() }.map { it.toJson() } as NSArray, USER_DEFAULTS_KEY)
+        when (val result = getToDoItems()) {
+            is ToDoItemsResult.Error -> return ToDoItemResult.Error(result.error)
+            is ToDoItemsResult.Value -> {
+                val todoItems = result.todoItems.toMutableList()
+                val newToDoItem = item.mapToDoItem(
+                    id = todoItems.sortedBy { it.id }.lastOrNull()?.id?.plus(1) ?: 1,
+                    createdAt = epochMillis()
+                )
+                todoItems.add(newToDoItem)
+                userDefaults.setObject(todoItems.map { it.mapToDoItemModel() }.map { it.toJson() } as NSArray, USER_DEFAULTS_KEY)
+                return ToDoItemResult.Value(newToDoItem)
+            }
+        }
     }
 
-    override fun removeToDoItem(item: ToDoItem) {
+    override suspend fun deleteToDoItem(id: Int): ToDoItemResult {
         val userDefaults = NSUserDefaults.standardUserDefaults
-        val items = getToDoItems().toMutableList()
-        items.removeAll { it.id == item.id }
-        userDefaults.setObject(items.map { it.mapToDoItemModel() }.map { it.toJson() } as NSArray, USER_DEFAULTS_KEY)
+        when (val result = getToDoItems()) {
+            is ToDoItemsResult.Error -> return ToDoItemResult.Error(result.error)
+            is ToDoItemsResult.Value -> {
+                val todoItems = result.todoItems.toMutableList()
+                val item = todoItems.firstOrNull { it.id == id } ?: return ToDoItemResult.Error(Exception("Item not found"))
+                todoItems.removeAll { it.id == id }
+                userDefaults.setObject(todoItems.map { it.mapToDoItemModel() }.map { it.toJson() } as NSArray, USER_DEFAULTS_KEY)
+                return ToDoItemResult.Value(item)
+            }
+        }
     }
 
-    override fun updateToDoItem(item: ToDoItem) {
+    override suspend fun updateToDoItem(item: UpdateToDoItem): ToDoItemResult {
         val userDefaults = NSUserDefaults.standardUserDefaults
-        val items = getToDoItems().toMutableList()
-        val index = items.indexOfFirst { it.id == item.id }
-        if (index != -1) {
-            items[index] = item
-            userDefaults.setObject(items.map { it.mapToDoItemModel() }.map { it.toJson() } as NSArray, USER_DEFAULTS_KEY)
+        when (val result = getToDoItems()) {
+            is ToDoItemsResult.Error -> return ToDoItemResult.Error(result.error)
+            is ToDoItemsResult.Value -> {
+                val todoItems = result.todoItems.toMutableList()
+                val index = todoItems.indexOfFirst { it.id == item.id }
+                if (index != -1) {
+                    val existingTodoItem = todoItems[index]
+                    val updatedTodoItem = item.mapToDoItem(existingTodoItem)
+                    todoItems[index] = updatedTodoItem
+                    userDefaults.setObject(todoItems.map { it.mapToDoItemModel() }.map { it.toJson() } as NSArray, USER_DEFAULTS_KEY)
+                    return ToDoItemResult.Value(updatedTodoItem)
+                }
+                return ToDoItemResult.Error(Exception("Item not found"))
+            }
         }
     }
 
