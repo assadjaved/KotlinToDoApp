@@ -1,17 +1,24 @@
-class ToDoItemsManager(private val repository: ToDoItemsRepository): ToDoItemsRepository {
-    override fun getToDoItems(): List<ToDoItem> {
+internal expect fun TodoItemsLocalRepository(): ToDoItemsRepository
+
+class ToDoItemsManager(private val repositoryType: ToDoItemsRepositoryType) {
+
+    private val repository: ToDoItemsRepository = when (repositoryType) {
+        ToDoItemsRepositoryType.LOCAL -> TodoItemsLocalRepository()
+        ToDoItemsRepositoryType.REMOTE -> TodoItemsRemoteRepository()
+    }
+    suspend fun getToDoItems(): ToDoItemsResult {
         return repository.getToDoItems()
     }
 
-    override fun addToDoItem(item: ToDoItem) {
-        repository.addToDoItem(item)
+    suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult {
+        return repository.addToDoItem(item)
     }
 
-    override fun removeToDoItem(item: ToDoItem) {
-        repository.removeToDoItem(item)
+    suspend fun deleteToDoItem(id: Int): ToDoItemResult {
+        return repository.deleteToDoItem(id)
     }
 
-    override fun updateToDoItem(item: ToDoItem) {
-        repository.updateToDoItem(item)
+    suspend fun updateToDoItem(item: UpdateToDoItem): ToDoItemResult {
+        return repository.updateToDoItem(item)
     }
 }

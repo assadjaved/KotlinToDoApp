@@ -10,74 +10,74 @@ struct iOSApp: App {
 	}
     
     // test code
-    private let todoItemsManager = ToDoItemsManager(
-        repository: ToDoItemsRepositoryIOS()
-    )
-    
-    private let todoItemsClient = TodoItemsHttpClient()
+    private let todoItemsManager = ToDoItemsManager(repositoryType: .local)
     
     init() {
         mainTest()
     }
     
     private func mainTest() {
-//                todoItemsManager.addToDoItem(
-//                    item: .init(
-//                        id: 1,
-//                        title: "todo1",
-//                        description: "todo1 desp",
-//                        isCompleted: false
-//                    )
-//                )
-//        
-//                todoItemsManager.addToDoItem(
-//                    item: .init(
-//                        id: 2,
-//                        title: "todo2",
-//                        description: "todo2 desp",
-//                        isCompleted: false
-//                    )
-//                )
-//        
-//                let storedTodoItems = todoItemsManager.getToDoItems()
-//                print(storedTodoItems)
         
-//        Task {
-//            do {
-//                let addResult = try await todoItemsClient.addToDoItem(
-//                    item: .init(
-//                        title: "Call mom",
-//                        description: "Ask how mom's doing and update her about your life",
-//                        priority: .high
-//                    )
+        Task {
+            do {
+                
+                // create
+
+//                let item1 = try await todoItemsManager.addToDoItem(
+//                    item: .init(title: "new task", description: "new task descp", priority: .high)
 //                )
-//                print(addResult)
 //                
-//                let updateResult = try await todoItemsClient.updateToDoItem(
-//                    item: .init(
-//                        id: 6,
-//                        title: "Do Exercise ;)",
-//                        description: "Go for a 30-minute run on the track ",
-//                        priority: .high,
-//                        createdAt: 0,
-//                        completedAt: nil
-//                    )
+//                print(item1)
+//                
+//                let item2 = try await todoItemsManager.addToDoItem(
+//                    item: .init(title: "new new task", description: "new new task descp", priority: .medium)
 //                )
-//                print(updateResult)
 //                
-//                let deleteResult = try await todoItemsClient.deleteToDoItem(id: 4)
-//                print(deleteResult)
+//                print(item2)
+                
+                
+                // read
+
+//                let items = try await todoItemsManager.getToDoItems()
+//                print(items)
+                
+                
+                // update
+                
+//                let item1 = try await todoItemsManager.updateToDoItem(
+//                    item: .init(id: 100, title: "task 1 title", description: "task 1 descp", priority: .low, completedAt: nil)
+//                )
+//                
+//                print(item1)
+
+//                let item2 = try await todoItemsManager.updateToDoItem(
+//                    item: .init(id: 17, title: "task 1 title", description: "task 1 descp", priority: .low, completedAt: nil)
+//                )
+//                
+//                print(item2)
+//                
+//                let items = try await todoItemsManager.getToDoItems()
+//                print(items)
+                
+                
+                // delete
+                
+//                let item1 = try await todoItemsManager.deleteToDoItem(id: 100)
+//                print(item1)
 //
-//                let getResult = try await todoItemsClient.getToDoItems()
-//                switch onEnum(of: getResult) {
-//                case .value(let items):
-//                    print(items)
-//                case .error(let error):
-//                    print(error )
-//                }
-//            } catch let error {
-//                print(error)
-//            }
-//        }
+//                let item2 = try await todoItemsManager.deleteToDoItem(id: 17)
+//                print(item2)
+//
+//                let item3 = try await todoItemsManager.deleteToDoItem(id: 18)
+//                print(item3)
+//                
+//                let items = try await todoItemsManager.getToDoItems()
+//                print(items)
+                
+                
+            } catch let error {
+                print(error)
+            }
+        }
     }
 }

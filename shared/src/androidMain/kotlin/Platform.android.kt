@@ -1,4 +1,5 @@
 import android.os.Build
+import java.util.UUID
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
@@ -7,3 +8,5 @@ class AndroidPlatform : Platform {
 actual fun getPlatform(): Platform = AndroidPlatform()
 
 actual fun epochMillis(): Long = System.currentTimeMillis()
+
+actual fun uuid(): String = UUID.randomUUID().toString()

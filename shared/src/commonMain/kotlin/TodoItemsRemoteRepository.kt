@@ -4,11 +4,10 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import io.ktor.client.request.*
 import io.ktor.client.call.*
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 
-class TodoItemsHttpClient {
+internal class TodoItemsRemoteRepository: ToDoItemsRepository {
     private companion object {
         val BASE_URL = "http://localhost:3000"
         val API_VERSION = "v1"
@@ -25,17 +24,17 @@ class TodoItemsHttpClient {
         }
     }
 
-    suspend fun getToDoItems(): TodoItemsResult {
+    override suspend fun getToDoItems(): ToDoItemsResult {
         return try {
             val todoItemModels: List<ToDoItemModel> = httpClient.get(TODO_ITEMS_ENDPOINT).body()
             val toDoItems = todoItemModels.map { it.mapToDoItem() }
-            TodoItemsResult.Value(toDoItems)
+            ToDoItemsResult.Value(toDoItems)
         } catch (e: Exception) {
-            TodoItemsResult.Error(e)
+            ToDoItemsResult.Error(e)
         }
     }
 
-    suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult {
+    override suspend fun addToDoItem(item: AddToDoItem): ToDoItemResult {
         return try {
             val todoItemModel: ToDoItemModel = httpClient.post(TODO_ITEMS_ENDPOINT) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
@@ -47,11 +46,11 @@ class TodoItemsHttpClient {
         }
     }
 
-    suspend fun updateToDoItem(item: ToDoItem): ToDoItemResult {
+    override suspend fun updateToDoItem(item: UpdateToDoItem): ToDoItemResult {
         return try {
             val todoItemModel: ToDoItemModel = httpClient.put("$TODO_ITEMS_ENDPOINT/${item.id}") {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
-                setBody(item.mapToDoItemModel())
+                setBody(item.mapUpdateToDoItemModel())
             }.body()
             ToDoItemResult.Value(todoItemModel.mapToDoItem())
         } catch (e: Exception) {
@@ -59,7 +58,7 @@ class TodoItemsHttpClient {
         }
     }
 
-    suspend fun deleteToDoItem(id: Int): ToDoItemResult {
+    override suspend fun deleteToDoItem(id: Int): ToDoItemResult {
         return try {
             val todoItemModel: ToDoItemModel = httpClient.delete("$TODO_ITEMS_ENDPOINT/$id").body()
             ToDoItemResult.Value(todoItemModel.mapToDoItem())

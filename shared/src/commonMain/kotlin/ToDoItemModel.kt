@@ -4,7 +4,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
-data class ToDoItemModel(
+internal data class ToDoItemModel(
     val id: Int,
     val title: String,
     val description: String,
@@ -15,13 +15,22 @@ data class ToDoItemModel(
     val completedAt: Long? = null
 )
 
-fun ToDoItemModel.toJson(): String = Json.encodeToString(this)
+internal fun ToDoItemModel.toJson(): String = Json.encodeToString(this)
 
-fun String.toToDoItemModel(): ToDoItemModel = Json.decodeFromString(this)
+internal fun String.toToDoItemModel(): ToDoItemModel = Json.decodeFromString(this)
 
 @Serializable
-data class AddToDoItemModel(
+internal data class AddToDoItemModel(
     val title: String,
     val description: String,
     val priority: Int
+)
+
+@Serializable
+internal data class UpdateToDoItemModel(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val priority: Int,
+    val completedAt: Long? = null
 )
